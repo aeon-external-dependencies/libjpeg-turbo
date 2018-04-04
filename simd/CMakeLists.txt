@@ -39,7 +39,7 @@ elseif(CPU_TYPE STREQUAL "i386")
 endif()
 
 enable_language(ASM_NASM)
-message(STATUS "CMAKE_ASM_NASM_COMPILER = ${CMAKE_ASM_NASM_COMPILER}")
+#message(STATUS "CMAKE_ASM_NASM_COMPILER = ${CMAKE_ASM_NASM_COMPILER}")
 
 if(CMAKE_ASM_NASM_OBJECT_FORMAT MATCHES "macho*")
   set(CMAKE_ASM_NASM_FLAGS "${CMAKE_ASM_NASM_FLAGS} -DMACHO")
@@ -60,7 +60,7 @@ elseif(CPU_TYPE STREQUAL "i386")
   endif()
 endif()
 
-message(STATUS "CMAKE_ASM_NASM_OBJECT_FORMAT = ${CMAKE_ASM_NASM_OBJECT_FORMAT}")
+#message(STATUS "CMAKE_ASM_NASM_OBJECT_FORMAT = ${CMAKE_ASM_NASM_OBJECT_FORMAT}")
 
 if(NOT CMAKE_ASM_NASM_OBJECT_FORMAT)
   simd_fail("SIMD extensions disabled: could not determine NASM object format")
@@ -87,7 +87,7 @@ endif()
 
 string(TOUPPER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE_UC)
 set(EFFECTIVE_ASM_NASM_FLAGS "${CMAKE_ASM_NASM_FLAGS} ${CMAKE_ASM_NASM_FLAGS_${CMAKE_BUILD_TYPE_UC}}")
-message(STATUS "CMAKE_ASM_NASM_FLAGS = ${EFFECTIVE_ASM_NASM_FLAGS}")
+#message(STATUS "CMAKE_ASM_NASM_FLAGS = ${EFFECTIVE_ASM_NASM_FLAGS}")
 
 set(CMAKE_ASM_NASM_FLAGS "${CMAKE_ASM_NASM_FLAGS} -I\"${CMAKE_CURRENT_SOURCE_DIR}/nasm/\" -I\"${CMAKE_CURRENT_SOURCE_DIR}/${CPU_TYPE}/\"")
 
@@ -187,6 +187,7 @@ if(MSVC_IDE)
   set(SIMD_OBJS ${SIMD_OBJS} PARENT_SCOPE)
   add_library(simd OBJECT ${CPU_TYPE}/jsimd.c)
   add_custom_target(simd-objs DEPENDS ${SIMD_OBJS})
+  set_target_properties(simd-objs PROPERTIES FOLDER "External/libjpeg_turbo")
   add_dependencies(simd simd-objs)
 else()
   add_library(simd OBJECT ${SIMD_SOURCES} ${CPU_TYPE}/jsimd.c)
@@ -194,6 +195,8 @@ endif()
 if(NOT WIN32 AND (CMAKE_POSITION_INDEPENDENT_CODE OR ENABLE_SHARED))
   set_target_properties(simd PROPERTIES POSITION_INDEPENDENT_CODE 1)
 endif()
+
+set_target_properties(simd PROPERTIES FOLDER "External/libjpeg_turbo")
 
 
 ###############################################################################
