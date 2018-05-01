@@ -157,7 +157,15 @@ option(WITH_JPEG8 "Emulate libjpeg v8 API/ABI (this makes ${CMAKE_PROJECT_NAME} 
 boolean_number(WITH_JPEG8)
 option(WITH_MEM_SRCDST "Include in-memory source/destination manager functions when emulating the libjpeg v6b or v7 API/ABI" TRUE)
 boolean_number(WITH_MEM_SRCDST)
-option(WITH_SIMD "Include SIMD extensions, if available for this platform" TRUE)
+
+set(_WITH_SIMD_DEFAULT_VAL FALSE)
+
+if (MSVC)
+    set(_WITH_SIMD_DEFAULT_VAL TRUE)
+endif ()
+
+option(WITH_SIMD "Include SIMD extensions, if available for this platform" ${_WITH_SIMD_DEFAULT_VAL})
+
 boolean_number(WITH_SIMD)
 option(WITH_TURBOJPEG "Include the TurboJPEG API library and associated test programs" TRUE)
 boolean_number(WITH_TURBOJPEG)
@@ -604,7 +612,7 @@ if(WITH_TURBOJPEG)
     set_property(TARGET turbojpeg-static PROPERTY COMPILE_FLAGS
       "-DBMP_SUPPORTED -DPPM_SUPPORTED")
     set_target_properties(turbojpeg-static PROPERTIES FOLDER "External/libjpeg_turbo")
-    target_include_directories(turbojpeg-static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+    target_include_directories(turbojpeg-static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
     if(NOT MSVC)
       set_target_properties(turbojpeg-static PROPERTIES OUTPUT_NAME turbojpeg)
     endif()
