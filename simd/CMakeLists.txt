@@ -102,6 +102,8 @@ add_custom_target(jsimdcfg COMMAND
   ${GREP} -E '^[\;%]|^\ %' | sed 's%_cpp_protection_%%' |
   sed 's@% define@%define@g' >${CMAKE_CURRENT_SOURCE_DIR}/nasm/jsimdcfg.inc)
 
+set_target_properties(jsimdcfg PROPERTIES FOLDER "External/libjpeg_turbo")
+
 if(CPU_TYPE STREQUAL "x86_64")
   set(SIMD_SOURCES x86_64/jsimdcpu.asm x86_64/jfdctflt-sse.asm
     x86_64/jccolor-sse2.asm x86_64/jcgray-sse2.asm x86_64/jchuff-sse2.asm
