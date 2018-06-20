@@ -1,3 +1,41 @@
+2.0.0
+=====
+
+### Significant changes relative to 2.0 beta1:
+
+1. The TurboJPEG API can now decompress CMYK JPEG images that have subsampled M
+and Y components (not to be confused with YCCK JPEG images, in which the C/M/Y
+components have been transformed into luma and chroma.)   Previously, an error
+was generated ("Could not determine subsampling type for JPEG image") when such
+an image was passed to `tjDecompressHeader3()`, `tjTransform()`,
+`tjDecompressToYUVPlanes()`, `tjDecompressToYUV2()`, or the equivalent Java
+methods.
+
+2. Fixed an issue (CVE-2018-11813) whereby a specially-crafted malformed input
+file (specifically, a file with a valid Targa header but incomplete pixel data)
+would cause cjpeg to generate a JPEG file that was potentially thousands of
+times larger than the input file.  The Targa reader in cjpeg was not properly
+detecting that the end of the input file had been reached prematurely, so after
+all valid pixels had been read from the input, the reader injected dummy pixels
+with values of 255 into the JPEG compressor until the number of pixels
+specified in the Targa header had been compressed.  The Targa reader in cjpeg
+now behaves like the PPM reader and aborts compression if the end of the input
+file is reached prematurely.  Because this issue only affected cjpeg and not
+the underlying library, and because it did not involve any out-of-bounds reads
+or other exploitable behaviors, it was not believed to represent a security
+threat.
+
+3. Fixed an issue whereby the `tjLoadImage()` and `tjSaveImage()` functions
+would produce a "Bogus message code" error message if the underlying bitmap and
+PPM readers/writers threw an error that was specific to the readers/writers
+(as opposed to a general libjpeg API error.)
+
+4. Fixed an issue whereby a specially-crafted malformed BMP file, one in which
+the header specified an image width of 1073741824 pixels, would trigger a
+floating point exception (division by zero) in the `tjLoadImage()` function
+when attempting to load the BMP file into a 4-component image buffer.
+
+
 1.5.90 (2.0 beta1)
 ==================
 
