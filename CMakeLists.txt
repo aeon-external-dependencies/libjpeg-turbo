@@ -103,7 +103,7 @@ if(CMAKE_INSTALL_PREFIX STREQUAL "${CMAKE_INSTALL_DEFAULT_PREFIX}")
   endif()
 endif()
 
-include(cmakescripts/GNUInstallDirs.cmake)
+#include(cmakescripts/GNUInstallDirs.cmake)
 
 set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_FULL_LIBDIR})
 
